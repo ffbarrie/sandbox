@@ -12,6 +12,7 @@ public class TestLeague {
 		Assert.assertEquals("first league", league.getName());
 	}
 
+	@Test
 	public void testEquals() {
 		final League league1 = new League(1, "first league");
 		final League league2 = new League(2, "second league");
