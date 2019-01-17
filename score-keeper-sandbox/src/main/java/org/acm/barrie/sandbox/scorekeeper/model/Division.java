@@ -11,12 +11,13 @@ package org.acm.barrie.sandbox.scorekeeper.model;
  */
 public class Division extends NamedObject {
 
-	/**
-	 *
-	 * @param id
-	 * @param name
-	 */
-	public Division(final long id, final String name) {
-		super(id, name);
-	}
+    /**
+     * Create a division with the specified id and name.
+     *
+     * @param id   - unique ID for this division.
+     * @param name - name of this division.
+     */
+    public Division(final long id, final String name) {
+        super(id, name);
+    }
 }

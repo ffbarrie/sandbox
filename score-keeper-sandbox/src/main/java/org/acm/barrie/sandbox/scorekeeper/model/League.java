@@ -11,12 +11,13 @@ package org.acm.barrie.sandbox.scorekeeper.model;
  */
 public class League extends NamedObject {
 
-	/**
-	 *
-	 * @param id
-	 * @param name
-	 */
-	public League(final long id, final String name) {
-		super(id, name);
-	}
+    /**
+     * Creates a league with the specified id and name.
+     *
+     * @param id   - unique ID of the league.
+     * @param name - name of the league.
+     */
+    public League(final long id, final String name) {
+        super(id, name);
+    }
 }
