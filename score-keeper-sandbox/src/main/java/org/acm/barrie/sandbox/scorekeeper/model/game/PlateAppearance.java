@@ -11,211 +11,303 @@ import org.acm.barrie.sandbox.scorekeeper.model.player.Player;
 /**
  * @author Fred
  */
-public class PlateAppearance
-{
+public class PlateAppearance {
 
-	private int balls;
-	private final List<Player> batters;
-	private final List<Player> pictchers;
-	private PlateAppearanceResult result;
-	private String resultAsText;
-	private int strikes;
+    private int balls;
+    private final List<Player> batters;
+    private int fouls;
+    private final List<Player> pitchers;
+    private PlateAppearanceResult result;
+    private int strikes;
 
-	/**
-	 * Create a new AtBat
-	 *
-	 * @param batter
-	 * @param pitcher
-	 */
-	public PlateAppearance(final Player batter, final Player pitcher)
-	{
-		this.batters = new ArrayList<>();
-		this.batters.add(batter);
-		this.pictchers = new ArrayList<>();
-		this.pictchers.add(pitcher);
-		this.strikes = 0;
-		this.balls = 0;
-		this.result = PlateAppearanceResult.UNKNOWN;
-		this.resultAsText = "";
-	}
+    /**
+     * Create a new Plate Appearance
+     *
+     * @param batter
+     * @param pitcher
+     */
+    public PlateAppearance(final Player batter, final Player pitcher) {
+        assert batter != null;
+        assert pitcher != null;
 
-	/**
-	 *
-	 */
-	public void ball()
-	{
-		this.balls++;
-	}
+        batters = new ArrayList<>();
+        batters.add(batter);
+        pitchers = new ArrayList<>();
+        pitchers.add(pitcher);
+        strikes = 0;
+        balls = 0;
+        fouls = 0;
+        result = PlateAppearanceResult.UNKNOWN;
+    }
 
-	/**
-	 * @return the result of the plate appearance
-	 */
-	public PlateAppearanceResult getResult()
-	{
-		return this.result;
-	}
+    /**
+     * Pitcher throws a ball
+     */
+    public void ball() {
+        balls++;
+        if (balls == 4) {
+            result = PlateAppearanceResult.BASE_ON_BALLS;
+        }
+    }
 
-	/**
-	 * @return the result as text
-	 */
-	public String getResultAsText()
-	{
-		return this.resultAsText;
-	}
+    /**
+     * The pitcher threw a strike, the batter did not swing.
+     */
+    public void calledStrike() {
+        strikes++;
+        if (strikes == 3) {
+            result = PlateAppearanceResult.STRIKE_OUT_LOOKING;
+        }
+    }
 
-	/**
-	 * The result of the plate appearance.
-	 *
-	 * @param newResult
-	 * @param newResultAsText
-	 */
-	public void result(final PlateAppearanceResult newResult, final String newResultAsText)
-	{
-		this.result = newResult;
-		this.resultAsText = newResultAsText;
-	}
+    /**
+     * Batter hits a foul ball.
+     */
+    public void foul() {
+        fouls++;
+        if (strikes < 2) {
+            strikes++;
+        }
+    }
 
-	/**
-	 *
-	 */
-	public void strike()
-	{
-		this.strikes--;
-	}
+    public void foulBunt() {
+        fouls++;
+        strikes++;
+        if (strikes == 3) {
+            result = PlateAppearanceResult.STRIKE_OUT;
+        }
+    }
 
-	@Override
-	public String toString()
-	{
-		final String info = this.result == PlateAppearanceResult.UNKNOWN ? String.format("(%s-%s)", Integer.valueOf(this.balls), Integer.valueOf(this.strikes)) : this.resultAsText;
-		return String.format("%s vs %s (%s)", this.batters.get(this.batters.size() - 1), this.pictchers.get(this.pictchers.size() - 1), info);
-	}
+    /**
+     * @return the balls
+     */
+    public int getBalls() {
+        return balls;
+    }
 
-	/**
-	 * Result of a plate appearance.
-	 *
-	 * @author Fred
-	 */
-	public enum PlateAppearanceResult
-	{
-		/**
-		 * Automatic double. For example, a fair ball that bounces into the stands.
-		 */
-		AUTOMATIC_DOUBLE,
+    /**
+     * @return the batters
+     */
+    public List<Player> getBatters() {
+        return batters;
+    }
 
-		/**
-		 * Batter reaches first base on four balls.
-		 */
-		BASE_ON_BALLS,
+    /**
+     * @return the fouls
+     */
+    public int getFouls() {
+        return fouls;
+    }
 
-		/**
-		 * Catcher interferes with the play.
-		 */
-		DEFENSIVE_INTERFERENCE,
+    /**
+     * @return the pitchers
+     */
+    public List<Player> getPitchers() {
+        return pitchers;
+    }
 
-		/**
-		 * Defense obstructs the play.
-		 */
-		DEFENSIVE_OBSTRUCTION,
+    /**
+     * @return the result of the plate appearance
+     */
+    public PlateAppearanceResult getResult() {
+        return result;
+    }
 
-		/**
-		 * Double hit.
-		 */
-		DOUBLE,
+    /**
+     * @return the strikes
+     */
+    public int getStrikes() {
+        return strikes;
+    }
 
-		/**
-		 * Batter reaches on an error.
-		 */
-		ERROR,
+    /**
+     * The pitcher hit the batter
+     */
+    public void hitBatter() {
+        result = PlateAppearanceResult.HIT_BY_PITCH;
+    }
 
-		/**
-		 * Batter reaches on a fielders choice.
-		 */
-		FIELDERS_CHOICE,
+    /**
+     * The pitcher throws an intentional ball.
+     */
+    public void intentionalBall() {
+        balls++;
+        if (balls == 4) {
+            result = PlateAppearanceResult.BASE_ON_BALLS;
+        }
+    }
 
-		/**
-		 * Batter is out with a fly ball.
-		 */
-		FLY_OUT,
+    /**
+     * The batter is intentionally walked.
+     */
+    public void intentionalWalk() {
+        balls = 4;
+        result = PlateAppearanceResult.BASE_ON_BALLS;
+    }
 
-		/**
-		 * Batter is out with a ground out.
-		 */
-		GROUND_OUT,
+    public void pitchOut() {
+        balls++;
+        if (balls == 4) {
+            result = PlateAppearanceResult.BASE_ON_BALLS;
+        }
+    }
 
-		/**
-		 * Ground rule double. When an actual ground rule states a double.
-		 */
-		GROUND_RULE_DOUBLE,
+    public void swingingStike() {
+        strikes++;
+        if (strikes == 3) {
+            result = PlateAppearanceResult.STRIKE_OUT;
+        }
+    }
 
-		/**
-		 * Batter is hit by a pitch and is awarded first base.
-		 */
-		HIT_BY_PITCH,
+    @Override
+    public String toString() {
+        final String info = result == PlateAppearanceResult.UNKNOWN
+                ? String.format("%s-%s", Integer.valueOf(balls), Integer.valueOf(strikes))
+                : result.getSymbol();
+        return String.format("%s vs %s (%s)", batters.get(batters.size() - 1), pitchers.get(pitchers.size() - 1), info);
+    }
 
-		/**
-		 * Home run
-		 */
-		HOME_RUN,
+    /**
+     * Result of a plate appearance.
+     *
+     * @author Fred
+     */
+    public enum PlateAppearanceResult {
 
-		/**
-		 * The offense interferes with the play.
-		 */
-		OFFENSIVE_INTERFERENCE,
+        /**
+         * Automatic double. For example, a fair ball that bounces into the stands.
+         */
+        AUTOMATIC_DOUBLE("G2B"),
 
-		/**
-		 * Batter hits a bunt ball to advance a base runner
-		 */
-		SACRIFICE_BUNT,
+        /**
+         * Batter reaches first base on four balls.
+         */
+        BASE_ON_BALLS("BB"),
 
-		/**
-		 * Batter hits a sacrifice fly that scores a run from third.
-		 */
-		SACRIFICE_FLY,
+        /**
+         * Catcher interferes with the play.
+         */
+        DEFENSIVE_INTERFERENCE("DI"),
 
-		/**
-		 * Single hit.
-		 */
-		SINGLE,
+        /**
+         * Defense obstructs the play.
+         */
+        DEFENSIVE_OBSTRUCTION("DO"),
 
-		/**
-		 * Batter strikes out. Catcher catches pitch or runner on first with less than two outs.
-		 */
-		STRIKE_OUT,
+        /**
+         * Double hit.
+         */
+        DOUBLE("2B"),
 
-		/**
-		 * Batter strikes out. Catcher drops pitch and batter is tagged by catcher or batter walks away.
-		 */
-		STRIKE_OUT_CATCHER_PUT_OUT,
+        /**
+         * Batter reaches on an error.
+         */
+        ERROR("E"),
 
-		/**
-		 * Batter strikes out. Catcher drops pitch and catcher throws out the runner at first.
-		 */
-		STRIKE_OUT_CATCHER_TO_FIRST,
+        /**
+         * Batter reaches on a fielders choice.
+         */
+        FIELDERS_CHOICE("FC"),
 
-		/**
-		 * Batter strikes out looking.
-		 */
-		STRIKE_OUT_LOOKING,
+        /**
+         * Batter is out with a fly ball.
+         */
+        FLY_OUT("F"),
 
-		/**
-		 * Batter strikes out but reaches first base on a passed ball not being caught by the catcher.
-		 */
-		STRIKE_OUT_PASSED_BALL,
+        /**
+         * Batter is out with a ground out.
+         */
+        GROUND_OUT(""),
 
-		/**
-		 * Batter strikes out but reaches first base on a wild pitch not being caught by the catcher.
-		 */
-		STRIKE_OUT_WILD_PITCH,
+        /**
+         * Ground rule double. When an actual ground rule states a double.
+         */
+        GROUND_RULE_DOUBLE("2B"),
 
-		/**
-		 * Triple hit.
-		 */
-		TRIPLE,
+        /**
+         * Batter is hit by a pitch and is awarded first base.
+         */
+        HIT_BY_PITCH("HBP"),
 
-		/**
-		 * Unknown result. Still in progress? etc.
-		 */
-		UNKNOWN
+        /**
+         * Home run
+         */
+        HOME_RUN("HR"),
 
-	}
+        /**
+         * The offense interferes with the play.
+         */
+        OFFENSIVE_INTERFERENCE("OI"),
+
+        /**
+         * Batter hits a bunt ball to advance a base runner
+         */
+        SACRIFICE_BUNT("SB"),
+
+        /**
+         * Batter hits a sacrifice fly that scores a run from third.
+         */
+        SACRIFICE_FLY("SF"),
+
+        /**
+         * Single hit.
+         */
+        SINGLE("1B"),
+
+        /**
+         * Batter strikes out. Catcher catches pitch or runner on first with less than
+         * two outs.
+         */
+        STRIKE_OUT("K"),
+
+        /**
+         * Batter strikes out. Catcher drops pitch and batter is tagged by catcher or
+         * batter walks away.
+         */
+        STRIKE_OUT_CATCHER_PUT_OUT("K U2"),
+
+        /**
+         * Batter strikes out. Catcher drops pitch and catcher throws out the runner at
+         * first.
+         */
+        STRIKE_OUT_CATCHER_TO_FIRST("K 2-3"),
+
+        /**
+         * Batter strikes out looking.
+         */
+        STRIKE_OUT_LOOKING("ꓘ"),
+
+        /**
+         * Batter strikes out but reaches first base on a passed ball not being caught
+         * by the catcher.
+         */
+        STRIKE_OUT_PASSED_BALL("K E2"),
+
+        /**
+         * Batter strikes out but reaches first base on a wild pitch not being caught by
+         * the catcher.
+         */
+        STRIKE_OUT_WILD_PITCH("K E1"),
+
+        /**
+         * Triple hit.
+         */
+        TRIPLE("3B"),
+
+        /**
+         * Unknown result. Still in progress? etc.
+         */
+        UNKNOWN("");
+
+        private String symbol;
+
+        private PlateAppearanceResult(final String symbol) {
+            this.symbol = symbol;
+        }
+
+        public String getSymbol() {
+            return symbol;
+        }
+
+    }
 }

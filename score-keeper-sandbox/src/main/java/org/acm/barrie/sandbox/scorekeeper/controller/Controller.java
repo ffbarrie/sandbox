@@ -8,20 +8,16 @@ import org.acm.barrie.sandbox.scorekeeper.model.Model;
 /**
  * @author Fred
  */
-public class Controller
-{
+public class Controller {
 
-	private final Model model;
+    private final Model model;
 
-	/**
-	 * @param model
-	 */
-	public Controller(final Model model)
-	{
-		this.model = model;
-		if (this.model == null)
-		{
-			throw new NullPointerException("model argument cannot be null.");
-		}
-	}
+    /**
+     * @param model
+     */
+    public Controller(final Model model) {
+        assert model != null;
+        this.model = model;
+        assert this.model != null; // removes warning for now
+    }
 }
